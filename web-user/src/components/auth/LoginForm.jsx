@@ -1,97 +1,59 @@
 import { useState } from "react";
 import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
 import styles from "../../styles/components/auth/LoginForm.module.css";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleGoogleLogin = async () => {
     setError("");
     setLoading(true);
     try {
       const apiBase = import.meta.env.VITE_API_URL || "http://localhost:3001";
-      const res = await axios.post(`${apiBase}/api/auth/login`, { email, password });
-      if (res.data && res.data.ok && res.data.token) {
-        localStorage.setItem('token', res.data.token);
-        // optionally store user
-        localStorage.setItem('user', JSON.stringify(res.data.user || {}));
-        window.location.href = '/';
+      const { data } = await axios.get(`${apiBase}/api/auth/google`);
+      if (data.url) {
+        window.location.href = data.url;
       } else {
-        setError((res.data && res.data.message) || 'Login failed');
+        setError("Failed to get Google login URL.");
       }
     } catch (err) {
-      setError(err?.response?.data?.message || err.message || 'Server error');
+      setError(err?.response?.data?.message || "Could not initiate Google login.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-  };
-
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
+    <div className={styles.form}>
       <h2 className={styles.title}>Welcome Back</h2>
-
-      <label className={styles.field}>
-        <span className={styles.label}>EMAIL</span>
-        <input
-          className={styles.input}
-          type="email"
-          placeholder="name@pup.edu.ph"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </label>
-
-      <label className={styles.field}>
-        <span className={styles.label}>PASSWORD</span>
-        <input
-          className={styles.input}
-          type="password"
-          placeholder="********"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </label>
-
-      <div className={styles.forgotLink}>
-        <a href="/forgot-password">FORGOT PASSWORD?</a>
-      </div>
-
-      <button className={styles.primaryButton} type="submit" disabled={loading}>
-        {loading ? 'Logging in...' : 'Login'}
-      </button>
-
-      {error && <p className={styles.errorText}>{error}</p>}
+      <p className={styles.description} style={{ textAlign: "center", color: "#555" }}>
+        Sign in with your official Google account to access your calendars and tasks.
+      </p>
 
       <button
         type="button"
         className={styles.googleButton}
         onClick={handleGoogleLogin}
+        disabled={loading}
       >
         <FcGoogle className={styles.googleIcon} />
-        Continue With Google
+        {loading ? "Redirecting..." : "Continue With Google"}
       </button>
 
+      {error && <p className={styles.errorText} style={{ color: "red", textAlign: "center" }}>{error}</p>}
+
       <div className={styles.registerSection}>
-        <span className={styles.registerText}>New to the institution?</span>
-        <button
-          type="button"
-          className={styles.secondaryButton}
-          onClick={() => (window.location.href = "/register")}
-        >
-          Register
-        </button>
+        <span className={styles.registerText}>Don't have an account yet?</span>
+        <p className={styles.info} style={{ fontSize: "0.85rem", color: "#555" }}>
+          First-time users must authenticate with Google and provide an account code.
+        </p>
+        <Link to="/register" className={styles.secondaryButton}>
+          Create Account
+        </Link>
       </div>
-    </form>
+    </div>
   );
 }

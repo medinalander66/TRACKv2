@@ -32,7 +32,7 @@ if (process.env.RUN_SYNC === 'true') {
   sequelize.authenticate()
     .then(() => {
       console.log('✅ Connected to TiDB Cloud');
-      return sequelize.sync(/* use { force: true } only if you need to reset */);
+      return sequelize.sync({ force: true });
     })
     .then(() => {
       console.log('✅ Tables synced');
@@ -40,11 +40,6 @@ if (process.env.RUN_SYNC === 'true') {
     })
     .then(() => console.log('✅ Seed complete'))
     .catch(err => console.error('❌ Error:', err));
-} else {
-  // Just connect, no schema changes
-  sequelize.authenticate()
-    .then(() => console.log('✅ Connected to TiDB Cloud (no sync)'))
-    .catch(err => console.error('❌ DB Connection Error:', err));
 }
 
 module.exports = app;

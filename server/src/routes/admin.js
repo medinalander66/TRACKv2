@@ -10,6 +10,18 @@ const {
   createOffice,
   toggleOffice
 } = require('../controllers/setupController');
+const {
+  listDomains,
+  addDomain,
+  toggleDomain,
+  deleteDomain
+} = require('../controllers/domainController');
+
+// ── Allowed Domains ──
+router.get('/domains', requireAdmin, listDomains);
+router.post('/domains', requireAdmin, addDomain);
+router.put('/domains/:id/toggle', requireAdmin, toggleDomain);
+router.delete('/domains/:id', requireAdmin, deleteDomain);
 
 // ── Test ──
 router.get('/me', requireAdmin, (req, res) => {

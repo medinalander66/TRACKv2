@@ -49,6 +49,9 @@ User.belongsTo(AccountCode, { foreignKey: 'account_code_id', onDelete: 'SET NULL
 // --- admins ---
 Admin.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 
+// --- admins ---
+const AllowedDomain = require('./allowed_domain');
+
 // --- user_profile ---
 UserProfile.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 UserProfile.belongsTo(Department, { foreignKey: 'department_id', onDelete: 'SET NULL' });
@@ -144,5 +147,6 @@ module.exports = {
   FeedbackRating,
   FeedbackKeyword,
   EmailQueue,
-  Notification
+  Notification,
+  AllowedDomain
 };

@@ -49,3 +49,25 @@ export const getRoles = async () => {
   const { data } = await apiClient.get('/lookups/roles');
   return data;
 };
+
+
+// ── Allowed Domains ──
+export const getDomains = async () => {
+  const { data } = await apiClient.get('/admin/domains');
+  return data;
+};
+
+export const addDomain = async (domain) => {
+  const { data } = await apiClient.post('/admin/domains', { domain });
+  return data;
+};
+
+export const toggleDomain = async (id) => {
+  const { data } = await apiClient.put(`/admin/domains/${id}/toggle`);
+  return data;
+};
+
+export const deleteDomain = async (id) => {
+  const { data } = await apiClient.delete(`/admin/domains/${id}`);
+  return data;
+};

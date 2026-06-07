@@ -5,25 +5,16 @@ const { User, Admin, UserSession, AccountCode, UserProfile, sequelize } = requir
 const { Op } = require('sequelize');
 
 // Login (supports username OR email)
+// Admin login only (username + password)
 exports.login = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    const credential = username || email;   // kung alin ang binigay
-
-    if (!credential || !password) {
-      return res.status(400).json({ ok: false, message: 'Username/email and password are required.' });
+    const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ ok: false, message: 'Username and password are required.' });
     }
 
-    // Hanapin user gamit ang username o email
-    const user = await User.findOne({
-      where: {
-        [Op.or]: [
-          { username: credential },
-          { email: credential }
-        ]
-      }
-    });
-
+    // Find by username
+    const user = await User.findOne({ where: { username } });
     if (!user) {
       return res.status(401).json({ ok: false, message: 'Invalid credentials.' });
     }
@@ -37,11 +28,14 @@ exports.login = async (req, res) => {
       return res.status(401).json({ ok: false, message: 'Invalid credentials.' });
     }
 
-    // Check kung admin (para sa admin login)
+    // Must be an admin
     const admin = await Admin.findOne({ where: { user_id: user.id, is_active: true } });
+    if (!admin) {
+      return res.status(403).json({ ok: false, message: 'Unauthorized. Admin access only.' });
+    }
 
     const token = jwt.sign(
-      { userId: user.id, isAdmin: !!admin },
+      { userId: user.id, isAdmin: true },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
@@ -62,11 +56,11 @@ exports.login = async (req, res) => {
         username: user.username,
         email: user.email,
         status: user.status,
-        is_admin: !!admin
+        is_admin: true
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('Admin login error:', error);
     res.status(500).json({ ok: false, message: 'Server error.' });
   }
 };
