@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3001/api',
+  // baseURL: 'http://localhost:3001/api', // localhost server
+  baseURL: 'https://trackv2-68rg.onrender.com/api', // live server
   headers: { 'Content-Type': 'application/json' }
 });
 
