@@ -1,9 +1,11 @@
 const sequelize = require('../config/database');
 
-// Import all models
+// Lookups
 const Department = require('./departments');
 const Office = require('./offices');
 const Role = require('./roles');
+
+// Core
 const User = require('./users');
 const Admin = require('./admins');
 const AccountCode = require('./account_codes');
@@ -11,10 +13,17 @@ const UserProfile = require('./user_profile');
 const UserBlock = require('./user_blocks');
 const UserSession = require('./user_sessions');
 const UserAuthIdentity = require('./user_auth_identities');
+const AllowedDomain = require('./allowed_domain');
+
+// Logs & Metrics
 const LoginAttempt = require('./login_attempts');
 const AuditLog = require('./audit_logs');
 const DailyMetric = require('./daily_metrics');
+
+// Requests
 const AccountCodeRequest = require('./account_code_requests');
+
+// User side
 const Venue = require('./venues');
 const Event = require('./events');
 const EventAttendee = require('./event_attendees');
@@ -23,18 +32,16 @@ const Task = require('./tasks');
 const TaskChecklistItem = require('./task_checklist_items');
 const TaskCollaborator = require('./task_collaborators');
 const Attachment = require('./attachments');
+
+// Feedback & Notifications
 const FeedbackRating = require('./feedback_ratings');
 const FeedbackKeyword = require('./feedback_keywords');
-const EmailQueue = require('./email_queue');
 const Notification = require('./notifications');
+const EmailQueue = require('./email_queue');
 
 // =====================
 // ASSOCIATIONS
 // =====================
-
-// --- departments, offices, roles ---
-// (no direct foreign keys to define beyond what's already in models,
-//  but we'll set up the relationships that are referenced by other tables)
 
 // --- account_codes ---
 AccountCode.belongsTo(Department, { foreignKey: 'department_id', onDelete: 'SET NULL' });
@@ -45,12 +52,10 @@ AccountCode.belongsTo(User, { foreignKey: 'used_by_user_id', onDelete: 'SET NULL
 
 // --- users ---
 User.belongsTo(AccountCode, { foreignKey: 'account_code_id', onDelete: 'SET NULL' });
+User.hasOne(UserProfile, { foreignKey: 'user_id' });      // ← this was missing!
 
 // --- admins ---
 Admin.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-
-// --- admins ---
-const AllowedDomain = require('./allowed_domain');
 
 // --- user_profile ---
 UserProfile.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
@@ -132,6 +137,7 @@ module.exports = {
   UserBlock,
   UserSession,
   UserAuthIdentity,
+  AllowedDomain,
   LoginAttempt,
   AuditLog,
   DailyMetric,
@@ -146,7 +152,6 @@ module.exports = {
   Attachment,
   FeedbackRating,
   FeedbackKeyword,
-  EmailQueue,
   Notification,
-  AllowedDomain
+  EmailQueue
 };

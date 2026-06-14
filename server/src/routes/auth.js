@@ -7,18 +7,21 @@ const {
   completeGoogleRegistration
 } = require('../controllers/googleAuthController');
 
+const { authenticate } = require('../middleware/auth');
+const { User, UserProfile, Department, Office, Role } = require('../models');
+
 // Local admin login
 router.post('/login', login);
-router.post('/register', register);   // (old registration, may be unused later)
+router.post('/register', register);
 
 // Google SSO
 router.get('/google', googleLoginUrl);
 router.get('/google/callback', googleCallback);
 router.post('/complete-google-registration', completeGoogleRegistration);
 
-router.get('/me', require('../middleware/auth').authenticate, async (req, res) => {
+// Get current authenticated user
+router.get('/me', authenticate, async (req, res) => {
   try {
-    const { User, UserProfile, Department, Office, Role } = require('../models');
     const user = await User.findByPk(req.userId, {
       include: [{ model: UserProfile, include: [Department, Office, Role] }]
     });
