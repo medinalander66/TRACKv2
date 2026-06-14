@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getMe } from '../api/auth';
 
 const AuthContext = createContext();
@@ -6,6 +7,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -25,11 +27,16 @@ export const AuthProvider = ({ children }) => {
   const login = (userData, token) => {
     localStorage.setItem('token', token);
     setUser(userData);
+    // Redirect based on role
+    const role = userData.role || 'faculty';   // fallback just in case
+    const rolePath = `/${role}/home`;
+    navigate(rolePath, { replace: true });
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    navigate('/login');
   };
 
   return (

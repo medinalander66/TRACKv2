@@ -10,6 +10,8 @@ export const completeGoogleRegistration = async (registrationToken, accountCode)
   const { data } = await apiClient.post('/auth/complete-google-registration', {
     registration_token: registrationToken,
     account_code: accountCode
+  }, {
+    timeout: 15000   // 15 seconds timeout
   });
   return data;
 };
