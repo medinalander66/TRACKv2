@@ -103,3 +103,8 @@ export const removeAssignment = async (id) => {
   const { data } = await apiClient.put(`/admin/position-assignments/${id}/remove`);
   return data;
 };
+
+export const getAvailablePositions = async () => {
+  const { data } = await apiClient.get('/admin/positions/available');
+  return data;
+};
