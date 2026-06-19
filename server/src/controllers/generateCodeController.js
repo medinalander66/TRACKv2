@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { Sequelize } = require('sequelize');
-const { AccountCode, Department, Office, Role, Position, PositionAssignment } = require('../models');
+const { AccountCode, Department, Office, Role, Position, PositionAssignment, Admin, User } = require('../models');
 
 function makePrefix(name) {
   if (!name) return 'ADM';
@@ -92,6 +92,7 @@ exports.generateAccountCode = async (req, res) => {
   }
 };
 
+
 exports.listCodes = async (req, res) => {
   try {
     const codes = await AccountCode.findAll({
@@ -99,9 +100,8 @@ exports.listCodes = async (req, res) => {
       limit: 100
     });
 
-    // Manually resolve each code's lookups
     const resolved = await Promise.all(codes.map(async (code) => {
-      let department = null, office = null, role = null, position = null;
+      let department = null, office = null, role = null, position = null, generatedBy = null;
 
       if (code.department_id) {
         const dept = await Department.findByPk(code.department_id);
@@ -119,6 +119,15 @@ exports.listCodes = async (req, res) => {
         const pos = await Position.findByPk(code.position_id);
         if (pos) position = pos.name;
       }
+      // Resolve generated_by admin username
+      if (code.generated_by_admin_id) {
+        const admin = await Admin.findByPk(code.generated_by_admin_id, {
+          include: [{ model: User, attributes: ['username'] }]
+        });
+        if (admin && admin.User) {
+          generatedBy = admin.User.username;
+        }
+      }
 
       return {
         id: code.id,
@@ -126,10 +135,11 @@ exports.listCodes = async (req, res) => {
         is_admin: code.is_admin,
         status: code.status,
         created_at: code.created_at,
-        department: department,
-        office: office,
-        role: role,
-        position: position
+        department,
+        office,
+        role,
+        position,
+        generated_by: generatedBy      // new field
       };
     }));
 
