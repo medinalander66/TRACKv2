@@ -95,16 +95,45 @@ exports.generateAccountCode = async (req, res) => {
 exports.listCodes = async (req, res) => {
   try {
     const codes = await AccountCode.findAll({
-      include: [
-        { model: Department, attributes: ['id', 'name'] },
-        { model: Office, attributes: ['id', 'name'] },
-        { model: Role, attributes: ['id', 'name'] },
-        { model: Position, attributes: ['id', 'name'] }   
-      ],
       order: [['created_at', 'DESC']],
       limit: 100
     });
-    res.json({ ok: true, codes });
+
+    // Manually resolve each code's lookups
+    const resolved = await Promise.all(codes.map(async (code) => {
+      let department = null, office = null, role = null, position = null;
+
+      if (code.department_id) {
+        const dept = await Department.findByPk(code.department_id);
+        if (dept) department = dept.name;
+      }
+      if (code.office_id) {
+        const off = await Office.findByPk(code.office_id);
+        if (off) office = off.name;
+      }
+      if (code.role_id) {
+        const rol = await Role.findByPk(code.role_id);
+        if (rol) role = rol.name;
+      }
+      if (code.position_id) {
+        const pos = await Position.findByPk(code.position_id);
+        if (pos) position = pos.name;
+      }
+
+      return {
+        id: code.id,
+        code: code.code,
+        is_admin: code.is_admin,
+        status: code.status,
+        created_at: code.created_at,
+        department: department,
+        office: office,
+        role: role,
+        position: position
+      };
+    }));
+
+    res.json({ ok: true, codes: resolved });
   } catch (error) {
     console.error('List codes error:', error);
     res.status(500).json({ ok: false, message: 'Server error.' });
