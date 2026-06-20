@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-const { sequelize, Event, EventAttendee, EventCollaborator, Venue } = require('../models');
+const { sequelize, Event, EventAttendee, EventCollaborator, Venue, Location, UserProfile } = require('../models');
 
 exports.createEvent = async (req, res) => {
   const t = await sequelize.transaction();
@@ -11,12 +11,17 @@ exports.createEvent = async (req, res) => {
       start_datetime,
       end_datetime,
       method,
-      venue_id,            // can be "undecided" -> null
+      venue_id,            // "undecided" → null
+      location_id,         // existing user location (optional)
+      exact_location,
+      street,
+      map_location,
+      department_id,       // required for department events
       description,
       color,
       attendee_ids,        // array of user UUIDs (can be empty)
-      collaborator_ids,    // array of user UUIDs (can be empty)
-      remind_before_minutes, // null = "none"
+      collaborator_ids,
+      remind_before_minutes,
       is_email_reminder
     } = req.body;
 
@@ -31,15 +36,57 @@ exports.createEvent = async (req, res) => {
       return res.status(400).json({ ok: false, message: 'End time must be after start time.' });
     }
 
-    // ── Venue handling ──────────────────────────────────
-    let finalVenueId = null;
-    if (venue_id && venue_id !== 'undecided') {
-      const venue = await Venue.findByPk(venue_id);
-      if (!venue) {
+    // ── Department event checks ────────────────────────
+    let finalDeptId = null;
+    if (visibility === 'department') {
+      if (!department_id) {
         await t.rollback();
-        return res.status(404).json({ ok: false, message: 'Venue not found.' });
+        return res.status(400).json({ ok: false, message: 'department_id is required for department events.' });
       }
-      finalVenueId = venue.id;
+      // Verify that the creator belongs to this department
+      const profile = await UserProfile.findOne({ where: { user_id: req.userId } });
+      if (!profile || profile.department_id !== department_id) {
+        await t.rollback();
+        return res.status(403).json({ ok: false, message: 'You can only create department events for your own department.' });
+      }
+      finalDeptId = department_id;
+    }
+
+    // ── Venue / Location logic ─────────────────────────
+    let finalVenueId = null;
+    let finalLocationId = null;
+
+    if (hierarchy === 'local') {
+      if (venue_id && venue_id !== 'undecided') {
+        const venue = await Venue.findByPk(venue_id);
+        if (!venue) {
+          await t.rollback();
+          return res.status(404).json({ ok: false, message: 'Venue not found.' });
+        }
+        finalVenueId = venue.id;
+      }
+    } else {
+      if (location_id) {
+        const loc = await Location.findByPk(location_id);
+        if (!loc) {
+          await t.rollback();
+          return res.status(404).json({ ok: false, message: 'Location not found.' });
+        }
+        finalLocationId = loc.id;
+      } else if (exact_location && map_location) {
+        const newLoc = await Location.create({
+          id: uuidv4(),
+          exact_location: exact_location.trim(),
+          street: street?.trim() || null,
+          map_location: map_location.trim(),
+          created_by: req.userId,
+          is_active: true
+        }, { transaction: t });
+        finalLocationId = newLoc.id;
+      } else {
+        await t.rollback();
+        return res.status(400).json({ ok: false, message: 'Either location_id or exact_location+map_location is required for external events.' });
+      }
     }
 
     // ── Create event ────────────────────────────────────
@@ -54,16 +101,17 @@ exports.createEvent = async (req, res) => {
       hierarchy,
       visibility,
       venue_id: finalVenueId,
-      department_id: req.body.department_id || null,
+      location_id: finalLocationId,
+      department_id: finalDeptId,
       office_id: req.body.office_id || null,
-      creator_id: req.userId,                     // from auth middleware
+      creator_id: req.userId,
       description,
       remind_before_minutes: remind_before_minutes || null,
       is_email_reminder: !!is_email_reminder,
       is_archived: false
     }, { transaction: t });
 
-    // ── Add creator as accepted attendee ────────────────
+    // ── Creator as accepted attendee ────────────────
     await EventAttendee.create({
       id: uuidv4(),
       event_id: event.id,
@@ -71,30 +119,30 @@ exports.createEvent = async (req, res) => {
       response: 'accepted'
     }, { transaction: t });
 
-    // ── Add invited attendees ──────────────────────────
+    // ── Attendees ────────────────────────────────────
     if (attendee_ids && attendee_ids.length > 0) {
-      const uniqueAttendees = [...new Set(attendee_ids)].filter(id => id !== req.userId);
-      if (uniqueAttendees.length > 0) {
-        const attendeeRecords = uniqueAttendees.map(userId => ({
-          id: uuidv4(),
-          event_id: event.id,
-          user_id: userId,
-          response: 'pending'
-        }));
-        await EventAttendee.bulkCreate(attendeeRecords, { transaction: t });
+      const unique = [...new Set(attendee_ids)].filter(id => id !== req.userId);
+      if (unique.length > 0) {
+        await EventAttendee.bulkCreate(
+          unique.map(userId => ({
+            id: uuidv4(),
+            event_id: event.id,
+            user_id: userId,
+            response: 'pending'
+          })), { transaction: t });
       }
     }
 
-    // ── Add collaborators ──────────────────────────────
+    // ── Collaborators ────────────────────────────────
     if (collaborator_ids && collaborator_ids.length > 0) {
-      const uniqueCollabs = [...new Set(collaborator_ids)];
-      const collabRecords = uniqueCollabs.map(userId => ({
-        id: uuidv4(),
-        event_id: event.id,
-        user_id: userId,
-        permission: 'edit'
-      }));
-      await EventCollaborator.bulkCreate(collabRecords, { transaction: t });
+      const unique = [...new Set(collaborator_ids)];
+      await EventCollaborator.bulkCreate(
+        unique.map(userId => ({
+          id: uuidv4(),
+          event_id: event.id,
+          user_id: userId,
+          permission: 'edit'
+        })), { transaction: t });
     }
 
     await t.commit();
@@ -108,6 +156,8 @@ exports.createEvent = async (req, res) => {
         start_datetime: event.start_datetime,
         end_datetime: event.end_datetime,
         venue_id: event.venue_id,
+        location_id: event.location_id,
+        department_id: event.department_id,
         creator_id: event.creator_id,
         created_at: event.created_at
       }
@@ -116,6 +166,20 @@ exports.createEvent = async (req, res) => {
   } catch (error) {
     await t.rollback();
     console.error('Create event error:', error);
+    res.status(500).json({ ok: false, message: 'Server error.' });
+  }
+};
+
+// List locations created by the current user (for reuse dropdown)
+exports.listMyLocations = async (req, res) => {
+  try {
+    const locations = await Location.findAll({
+      where: { created_by: req.userId, is_active: true },
+      order: [['created_at', 'DESC']]
+    });
+    res.json({ ok: true, locations });
+  } catch (error) {
+    console.error('List my locations error:', error);
     res.status(500).json({ ok: false, message: 'Server error.' });
   }
 };

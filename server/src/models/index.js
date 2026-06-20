@@ -34,6 +34,7 @@ const Task = require('./tasks');
 const TaskChecklistItem = require('./task_checklist_items');
 const TaskCollaborator = require('./task_collaborators');
 const Attachment = require('./attachments');
+const Location = require('./locations');
 
 // Feedback & Notifications
 const FeedbackRating = require('./feedback_ratings');
@@ -95,6 +96,8 @@ Venue.belongsTo(User, { foreignKey: 'created_by' });
 
 // --- events ---
 Event.belongsTo(Venue, { foreignKey: 'venue_id', onDelete: 'SET NULL' });
+Event.belongsTo(Location, { foreignKey: 'location_id', onDelete: 'SET NULL' });
+Location.hasMany(Event, { foreignKey: 'location_id' });
 Event.belongsTo(Department, { foreignKey: 'department_id', onDelete: 'SET NULL' });
 Event.belongsTo(Office, { foreignKey: 'office_id', onDelete: 'SET NULL' });
 Event.belongsTo(User, { foreignKey: 'creator_id' });

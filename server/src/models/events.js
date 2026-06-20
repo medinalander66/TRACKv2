@@ -31,10 +31,9 @@ const Event = sequelize.define('events', {
     type: DataTypes.DATE,
     allowNull: false
   },
-  duration_minutes: { 
+  duration_minutes: {
     type: DataTypes.INTEGER,
-    allowNull: true,
-    comment: 'Duration in minutes per occurrence. NULL = use start/end difference.'
+    allowNull: true
   },
   hierarchy: {
     type: DataTypes.ENUM('local', 'regional', 'national', 'international'),
@@ -45,6 +44,10 @@ const Event = sequelize.define('events', {
     allowNull: false
   },
   venue_id: {
+    type: DataTypes.UUID,
+    allowNull: true
+  },
+  location_id: {                     // NEW – points to user‑created location
     type: DataTypes.UUID,
     allowNull: true
   },
