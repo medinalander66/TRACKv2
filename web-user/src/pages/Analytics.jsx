@@ -29,7 +29,7 @@ function Analytics() {
 
       <main className={styles.content}>
         <div className={styles.insightsSection}>
-            <h2>Insights</h2>
+            <h2>Insight</h2>
             <p>Analytics & Performance</p>
         </div>
         <BarCard />
