@@ -3,6 +3,8 @@ import BottomNav from "../components/layout/BottomNav";
 import TopNav from "../components/layout/TopNav";
 import BarCard from "../components/analytics/BarCard";
 import styles from "../styles/pages/Analytics.module.css";
+import ConflictForecastCard from "../components/analytics/ConflictForecastCard";
+import InsightsCard from "../components/analytics/InsightsCard";
 
 function Analytics() {
   const handleMenuClick = () => {
@@ -33,6 +35,8 @@ function Analytics() {
             <p>Analytics & Performance</p>
         </div>
         <BarCard />
+        <ConflictForecastCard />
+        <InsightsCard/>
       </main>
 
       <BottomNav />

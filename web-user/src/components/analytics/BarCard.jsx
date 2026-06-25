@@ -40,11 +40,12 @@ const statusDotClass = {
   Missed: styles.dotMissed,
 };
 
-export default function BarCard({ title = "Campus Events" }) {
+function BarCard({ title = "Campus Events" , subtitle = "Event Status Overview" }) {
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <h2>{title}</h2>
+        <p>{subtitle}</p>
       </div>
 
       <div className={styles.chartWrapper}>
@@ -67,10 +68,7 @@ export default function BarCard({ title = "Campus Events" }) {
 
             <Bar dataKey="value" barSize={90} radius={[10, 10, 0, 0]}>
               {eventData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={colorMap[entry.status]}
-                />
+                <Cell key={`cell-${index}`} fill={colorMap[entry.status]} />
               ))}
             </Bar>
           </BarChart>
@@ -97,3 +95,5 @@ export default function BarCard({ title = "Campus Events" }) {
     </div>
   );
 }
+
+export default BarCard;
