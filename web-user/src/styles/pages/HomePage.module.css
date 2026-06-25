@@ -1,0 +1,18 @@
+
+/* Home page layout: center horizontally, column flow */
+.container {
+	display: block;
+	min-height: 100vh;
+	background: var(--page-background-color);
+	color: var(--text-color);
+}
+
+.content {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	align-items: stretch;
+    padding: 1rem;
+}
+

@@ -1,0 +1,15 @@
+.card {
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(178, 0, 0, 0.12);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.card.todayCard,
+.card.upcomingSection {
+  padding: 28px;
+}

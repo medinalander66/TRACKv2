@@ -1,0 +1,74 @@
+@import '../../../App.css';
+
+.form {
+  padding-bottom: 5rem;
+}
+
+.sectionContent{
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.titleInput {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--tertiary-color);
+  border: none;
+  padding: 2.5rem;
+  width: 100%;
+  background: grey;
+  height: 150px;
+}
+.titleInput::placeholder {
+  color: var(--fourth-color);
+}
+
+.titleInput:focus {
+  outline: 0.5px solid var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+.section {
+  border-radius: 12px;
+  padding: 1rem;
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--fifth-color);
+  margin-bottom: 0.25rem;
+}
+
+
+
+.row {
+  display: flex;
+  gap: 1rem;
+
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.col {
+  flex: 1;
+  min-width: 150px;
+  
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 700px) {
+  .row {
+    flex-direction: column;
+  }
+}

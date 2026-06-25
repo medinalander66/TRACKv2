@@ -1,0 +1,20 @@
+@import '../App.css';
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--page-background-color);
+}
+
+.main {
+  flex: 1;
+  padding-bottom: 1rem; /* space at bottom if no bottom nav */
+}
+
+/* Optional: if you use BottomNav later, adjust padding */
+@media (max-width: 768px) {
+  .main {
+    padding-bottom: 4rem; /* room for fixed bottom nav */
+  }
+}

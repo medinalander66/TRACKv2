@@ -1,0 +1,56 @@
+.topNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  background: var(--fifth-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.leftSideContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-direction: row;
+}
+.rightSideContainer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--primary-color);
+}
+
+.iconButton {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--tertiary-color);
+  justify-content: center;
+  font-weight: 600;
+}
+.iconButton svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--tertiary-color);
+  stroke: var(--tertiary-color);
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
