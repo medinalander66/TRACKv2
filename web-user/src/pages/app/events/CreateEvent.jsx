@@ -7,7 +7,7 @@ import RadioGroup from "../../../components/common/RadioGroup";
 import EventColor from "../../../components/events/EventColor";
 import InviteAttendeesModal from "../../../components/events/InviteAttendeesModal";
 import MapPicker from "../../../components/common/MapPicker";
-import FileAttachment from "../../../components/common/FileAttachment"; // ← NEW
+import FileAttachment from "../../../components/common/FileAttachment";
 import apiClient from "../../../api/client";
 import { useAuth } from "../../../context/AuthContext";
 import styles from "./CreateEvent.module.css";
@@ -48,30 +48,24 @@ export default function CreateEvent() {
   const [collaboratorIds, setCollaboratorIds] = useState([]);
   const [showAttendeeModal, setShowAttendeeModal] = useState(false);
   const [showCollabModal, setShowCollabModal] = useState(false);
-
-  // File attachments state – store objects with name/size for display and raw File for upload
-  const [attachments, setAttachments] = useState([]); // { file, name, size }
+  const [attachments, setAttachments] = useState([]); // [{ file, name, size }]
 
   const [departments, setDepartments] = useState([]);
   const [venues, setVenues] = useState([]);
-  const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   const fileInputRef = useRef(null);
 
-  // ... (existing useEffect for fetching data stays the same)
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [deptRes, venueRes, locRes] = await Promise.all([
+        const [deptRes, venueRes] = await Promise.all([
           apiClient.get("/lookups/departments"),
           apiClient.get("/venues"),
-          apiClient.get("/events/locations"),
         ]);
         setDepartments(deptRes.data.items || []);
         setVenues(venueRes.data.venues || []);
-        setLocations(locRes.data.locations || []);
       } catch (err) {
         console.error("Failed to load form data", err);
       }
@@ -82,7 +76,6 @@ export default function CreateEvent() {
   const updateField = (field, value) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
-  // Auto‑invite department members
   useEffect(() => {
     if (form.visibility === "department" && form.department_id) {
       apiClient
@@ -95,16 +88,6 @@ export default function CreateEvent() {
     }
   }, [form.department_id, form.visibility]);
 
-  // Clear map fields when saved location is chosen
-  useEffect(() => {
-    if (form.location_id) {
-      updateField("map_location", "");
-      updateField("exact_location", "");
-      updateField("street", "");
-    }
-  }, [form.location_id]);
-
-  // ── Attachment handlers ──────────────────────────
   const handleFileAdd = () => {
     fileInputRef.current?.click();
   };
@@ -117,7 +100,7 @@ export default function CreateEvent() {
       size: `${(file.size / 1024).toFixed(1)} KB`,
     }));
     setAttachments((prev) => [...prev, ...newAttachments]);
-    e.target.value = ""; // allow re-selecting the same file
+    e.target.value = "";
   };
 
   const handleRemoveFile = (fileToRemove) => {
@@ -145,27 +128,9 @@ export default function CreateEvent() {
         form.method !== "online" && form.hierarchy === "local"
           ? form.venue_id || "undecided"
           : undefined,
-      location_id:
-        form.method !== "online" && form.hierarchy !== "local"
-          ? form.location_id || undefined
-          : undefined,
-      exact_location:
-        form.method !== "online" &&
-        form.hierarchy !== "local" &&
-        !form.location_id
-          ? form.exact_location || ""
-          : undefined,
-      street:
-        form.method !== "online" &&
-        form.hierarchy !== "local" &&
-        !form.location_id
-          ? form.street || ""
-          : undefined,
       map_location:
-        form.method !== "online" &&
-        form.hierarchy !== "local" &&
-        !form.location_id
-          ? form.map_location
+        form.method !== "online" && form.hierarchy !== "local"
+          ? form.map_location || undefined
           : undefined,
       attendee_ids: attendeeIds,
       collaborator_ids: collaboratorIds,
@@ -173,18 +138,37 @@ export default function CreateEvent() {
       is_email_reminder: form.is_email_reminder,
     };
 
+    // 👇 PRINT THE EXACT JSON BEING SENT TO THE SERVER
+    console.log("Submitting event payload:", payload);
+
     try {
       const res = await apiClient.post("/events", payload);
-      if (res.data.ok) {
-        // Optionally upload attachments here after event creation,
-        // using the returned event.id. We'll add that later.
-        navigate("/calendar");
-      } else {
+      if (!res.data.ok) {
         setMessage(res.data.message || "Failed to create event");
+        setLoading(false);
+        return;
       }
+
+      const eventId = res.data.event.id;
+
+      if (attachments.length > 0) {
+        const formData = new FormData();
+        attachments.forEach(({ file }) => {
+          formData.append("files", file);
+        });
+
+        try {
+          await apiClient.post(`/attachments/event/${eventId}`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+        } catch (uploadErr) {
+          console.error("File upload failed:", uploadErr);
+        }
+      }
+
+      navigate("/calendar");
     } catch (err) {
       setMessage(err.response?.data?.message || "Server error");
-    } finally {
       setLoading(false);
     }
   };
@@ -205,7 +189,6 @@ export default function CreateEvent() {
   return (
     <div className={styles.pageWrapper}>
       <form onSubmit={handleSubmit} className={styles.form}>
-        {/* Title */}
         <div className={styles.titleSection}>
           <InputField
             className={styles.titleInput}
@@ -216,7 +199,6 @@ export default function CreateEvent() {
         </div>
 
         <div className={styles.sectionContent}>
-          {/* Color & Visibility */}
           <div className={styles.section}>
             <EventColor
               value={form.color}
@@ -256,7 +238,6 @@ export default function CreateEvent() {
             )}
           </div>
 
-          {/* Hierarchy & Department */}
           <div className={styles.section}>
             <SelectDropdown
               label="HIERARCHY LEVEL"
@@ -282,7 +263,6 @@ export default function CreateEvent() {
             )}
           </div>
 
-          {/* Venue / Location */}
           {form.method !== "online" && (
             <div className={styles.section}>
               {form.hierarchy === "local" ? (
@@ -296,43 +276,22 @@ export default function CreateEvent() {
                   onChange={(e) => updateField("venue_id", e.target.value)}
                 />
               ) : (
-                <>
-                  <SelectDropdown
-                    label="USE SAVED LOCATION"
-                    options={[
-                      { value: "", label: "-- New Location --" },
-                      ...locations.map((l) => ({
-                        value: l.id,
-                        label: `${l.exact_location}, ${l.map_location}`,
-                      })),
-                    ]}
-                    value={form.location_id}
-                    onChange={(e) => updateField("location_id", e.target.value)}
+                <div className={styles.mapContainer}>
+                  <label className={styles.sectionLabel}>MAP LOCATION</label>
+                  <MapPicker
+                    currentMapLocation={form.map_location}
+                    onLocationSelect={(loc) => {
+                      updateField("map_location", loc.map_location);
+                    }}
                   />
-                  {!form.location_id && (
-                    <div className={styles.mapContainer}>
-                      <label className={styles.sectionLabel}>
-                        MAP LOCATION
-                      </label>
-                      <MapPicker
-                        currentMapLocation={form.map_location}
-                        onLocationSelect={(loc) => {
-                          updateField("map_location", loc.map_location);
-                          updateField("exact_location", "");
-                          updateField("street", "");
-                        }}
-                      />
-                      <span className={styles.hint}>
-                        Click on the map or search for a location
-                      </span>
-                    </div>
-                  )}
-                </>
+                  <span className={styles.hint}>
+                    Click on the map or search for a location
+                  </span>
+                </div>
               )}
             </div>
           )}
 
-          {/* Schedule & Reminder */}
           <div className={styles.section}>
             <div className={styles.row}>
               <InputField
@@ -394,7 +353,6 @@ export default function CreateEvent() {
             </div>
           </div>
 
-          {/* Description */}
           <div className={styles.section}>
             <InputField
               label="DESCRIPTION"
@@ -406,7 +364,6 @@ export default function CreateEvent() {
             />
           </div>
 
-          {/* ── File Attachments ── */}
           <div className={styles.section}>
             <FileAttachment
               files={attachments.map(({ name, size }) => ({ name, size }))}
@@ -418,7 +375,6 @@ export default function CreateEvent() {
             />
           </div>
 
-          {/* Attendees & Collaborators */}
           <div className={styles.section}>
             <button
               type="button"
@@ -436,7 +392,6 @@ export default function CreateEvent() {
             </button>
           </div>
 
-          {/* Submit */}
           <div className={styles.section}>
             <Button type="submit" disabled={loading}>
               {loading ? "Creating..." : "Create Event"}
@@ -445,7 +400,6 @@ export default function CreateEvent() {
           </div>
         </div>
 
-        {/* Modals */}
         <InviteAttendeesModal
           isOpen={showAttendeeModal}
           onClose={() => setShowAttendeeModal(false)}
@@ -463,7 +417,6 @@ export default function CreateEvent() {
           departmentId={null}
         />
 
-        {/* Hidden file input for attachments */}
         <input
           type="file"
           multiple
