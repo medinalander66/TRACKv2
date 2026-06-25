@@ -12,9 +12,6 @@ exports.createEvent = async (req, res) => {
       end_datetime,
       method,
       venue_id,
-      location_id,
-      exact_location,
-      street,
       map_location,
       department_id,
       description,
@@ -67,21 +64,12 @@ exports.createEvent = async (req, res) => {
           finalVenueId = venue.id;
         }
       } else {
-        // External → location
-        if (location_id) {
-          // Use an existing saved location
-          const loc = await Location.findByPk(location_id);
-          if (!loc) {
-            await t.rollback();
-            return res.status(404).json({ ok: false, message: 'Location not found.' });
-          }
-          finalLocationId = loc.id;
-        } else if (map_location) {
-          // Create a new location from map‑provided address (exact_location & street are optional)
+        // External → only map_location, no saved locations
+        if (map_location) {
           const newLoc = await Location.create({
             id: uuidv4(),
-            exact_location: exact_location?.trim() || '',
-            street: street?.trim() || null,
+            exact_location: '',
+            street: null,
             map_location: map_location.trim(),
             created_by: req.userId,
             is_active: true
@@ -89,10 +77,7 @@ exports.createEvent = async (req, res) => {
           finalLocationId = newLoc.id;
         } else {
           await t.rollback();
-          return res.status(400).json({
-            ok: false,
-            message: 'Either location_id or map_location is required for external events.'
-          });
+          return res.status(400).json({ ok: false, message: 'map_location is required for external events.' });
         }
       }
     }
@@ -174,20 +159,6 @@ exports.createEvent = async (req, res) => {
   } catch (error) {
     await t.rollback();
     console.error('Create event error:', error);
-    res.status(500).json({ ok: false, message: 'Server error.' });
-  }
-};
-
-// List locations created by the current user (for reuse dropdown)
-exports.listMyLocations = async (req, res) => {
-  try {
-    const locations = await Location.findAll({
-      where: { created_by: req.userId, is_active: true },
-      order: [['created_at', 'DESC']]
-    });
-    res.json({ ok: true, locations });
-  } catch (error) {
-    console.error('List my locations error:', error);
     res.status(500).json({ ok: false, message: 'Server error.' });
   }
 };

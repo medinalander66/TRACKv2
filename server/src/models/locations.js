@@ -9,7 +9,7 @@ const Location = sequelize.define('locations', {
   },
   exact_location: {
     type: DataTypes.STRING(255),
-    allowNull: false
+    allowNull: true
   },
   street: {
     type: DataTypes.STRING(255),

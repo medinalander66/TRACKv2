@@ -3,6 +3,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const sequelize = require('./config/database');
 const models = require('./models');
+models.Location.sync();
 const seed = require('./seeders/seed');
 const path = require('path');
 
@@ -16,6 +17,7 @@ const lookupsRoutes = require('./routes/lookups');
 const venueRoutes = require('./routes/venues');
 const eventRoutes = require('./routes/events');
 const attachmentRoutes = require('./routes/attachments');
+
 
 app.use(cors());
 app.use(morgan('dev'));
