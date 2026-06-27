@@ -1,0 +1,71 @@
+.statsContainer{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.statsTitle{
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.statsButtons{
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-items: center;
+}
+.statsButtons button{
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 5rem;
+    text-align: center;
+    background-color: var(--primary-color);
+    border: none;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statsButtonIcon svg{
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+.statsFilterSection{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.statsFilterSection a{
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.statsFilterButtons{
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.statsFilterButtons button{
+    padding: 0.5rem 1rem;
+    border-radius: 5rem;
+    text-align: center;
+    background-color: var(--primary-color);
+    border: none;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+
+
+.statsFilterButtons button.active{
+    background-color: var(--primary-color);
+}
+.statsFilterButtons button.inactive{
+    background-color: var(--tertiary-color);
+}
