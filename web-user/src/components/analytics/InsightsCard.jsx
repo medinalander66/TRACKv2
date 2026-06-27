@@ -8,7 +8,8 @@ import {
   CartesianGrid,
 } from "recharts";
 import styles from "../../styles/components/analytics/Insights.module.css";
-
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import WarningIcon from "@mui/icons-material/Warning";
 const trendData = [
   { day: "Mon", conflictCount: 8 },
   { day: "Tue", conflictCount: 6 },
@@ -31,11 +32,32 @@ export default function InsightsCard() {
 
       <div className={styles.trendChart}>
         <ResponsiveContainer width="100%" height={140}>
-          <LineChart data={trendData} margin={{ top: 12, right: 10, left: 0, bottom: 6 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
-            <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: "#475569", fontSize: 12 }} />
-            <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0" }} />
-            <Line type="monotone" dataKey="conflictCount" stroke="#ef4444" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 5 }} />
+          <LineChart
+            data={trendData}
+            margin={{ top: 12, right: 10, left: 0, bottom: 6 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="#e5e7eb"
+              vertical={false}
+            />
+            <XAxis
+              dataKey="day"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: "#475569", fontSize: 12 }}
+            />
+            <Tooltip
+              contentStyle={{ borderRadius: 12, border: "1px solid #e2e8f0" }}
+            />
+            <Line
+              type="monotone"
+              dataKey="conflictCount"
+              stroke="#ef4444"
+              strokeWidth={3}
+              dot={{ r: 4 }}
+              activeDot={{ r: 5 }}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -61,12 +83,22 @@ export default function InsightsCard() {
 
       <div className={styles.infoGrid}>
         <div className={styles.infoCard}>
-          <h3>High Risk Alert</h3>
+          <div className={styles.infoCardTitle}>
+            <WarningIcon className={styles.icon} />
+            <h3>High Risk Alert</h3>
+          </div>
+
           <p>High risk on Monday: 8 conflicts predicted.</p>
         </div>
         <div className={styles.infoCard}>
-          <h3>Recommendation</h3>
-          <p>Recommend reviewing venue allocations and confirming backup rooms before Friday.</p>
+          <div className={styles.infoCardTitle}>
+            <LightbulbIcon className={styles.icon} />
+            <h3>Recommendation</h3>
+          </div>
+          <p>
+            Recommend reviewing venue allocations and confirming backup rooms
+            before Friday.
+          </p>
         </div>
       </div>
     </div>
