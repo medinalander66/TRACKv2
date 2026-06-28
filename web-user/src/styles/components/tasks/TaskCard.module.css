@@ -1,0 +1,129 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(21, 34, 55, 0.05);
+  width: 100%;
+}
+
+.prioritySection {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.priorityLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.high {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+}
+
+.medium {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+
+.low {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.radioTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  cursor: pointer;
+}
+
+.radioInput {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+}
+
+.title {
+  line-height: 1.3;
+}
+
+.infoRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #4b5563;
+  font-size: 0.94rem;
+}
+
+.infoIcon {
+  width: 18px;
+  height: 18px;
+  color: #6b7280;
+}
+
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progressLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progressLabel {
+  font-size: 0.85rem;
+  color: #374151;
+  font-weight: 600;
+}
+
+.progressValue {
+  font-size: 0.85rem;
+  color: #111827;
+  font-weight: 700;
+}
+
+.progressBar {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  transition: width 0.35s ease;
+}
