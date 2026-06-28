@@ -1,6 +1,8 @@
 import React from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DescriptionIcon from "@mui/icons-material/Description";
+import DateRangeIcon from "@mui/icons-material/DateRange";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import styles from "../../styles/components/tasks/TaskCard.module.css";
 
 function calculateProgress(assignments = []) {
@@ -61,6 +63,24 @@ function TaskCard({
         <div className={styles.infoItem}>
           <DescriptionIcon className={styles.infoIcon} />
           <span>{task.description || "No description provided."}</span>
+        </div>
+      </div>
+
+      <div className={styles.infoRow}>
+        <div className={styles.dateSection}>
+          <DateRangeIcon className={styles.infoIcon} />
+          <span>
+            {task.dateRange || (task.startDate || "—") + " → " + (task.endDate || "—")}
+          </span>
+        </div>
+      </div>
+
+      <div className={styles.infoRow}>
+        <div className={styles.timeSection}>
+          <AccessTimeIcon className={styles.infoIcon} />
+          <span>
+            {task.timeRange || (task.startTime || "—") + " → " + (task.endTime || "—")}
+          </span>
         </div>
       </div>
 
