@@ -10,8 +10,10 @@ import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
-import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
-import LocationCityOutlinedIcon from '@mui/icons-material/LocationCityOutlined';
+import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
+import LocationCityOutlinedIcon from "@mui/icons-material/LocationCityOutlined";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+
 // Helper to format date
 const formatDate = (dateStr) => {
   const d = new Date(dateStr);
@@ -474,13 +476,10 @@ function Home() {
 
     const creator = todayEvent.creator || {};
     const creatorName = creator.full_name || creator.username || "Unknown";
-    const parts = [
-      creatorName,
-      creator.position,
-      creator.department,
-      creator.office,
-    ].filter(Boolean);
-    const creatorDisplay = parts.join(" | ");
+    const creatorPosition = creator.position || "";
+    const creatorAffiliation = [creator.department, creator.office]
+      .filter(Boolean)
+      .join(" | ");
 
     const participants = todayEvent.participants || {};
     const depts = participants.departments || [];
@@ -518,11 +517,38 @@ function Home() {
             </span>
             {todayEvent.method}
           </span>
-          <span className={styles.metaContent}> <span> <LocationCityOutlinedIcon fontSize="small"/> </span>{todayEvent.hierarchy}</span>
-          <span className={styles.metaContent}> <span><EventOutlinedIcon fontSize="small"/></span>{todayEvent.event_type}</span>
-        </div>
-        <div className={styles.todayCreator}>
-          <strong>{creatorDisplay}</strong>
+          <span className={styles.metaContent}>
+            <span>
+              <LocationCityOutlinedIcon fontSize="small" />
+            </span>
+            {todayEvent.hierarchy}
+          </span>
+          <span className={styles.metaContent}>
+            <span>
+              <EventOutlinedIcon fontSize="small" />
+            </span>
+            {todayEvent.event_type}
+          </span>
+          <span className={styles.metaContent}>
+            <span className={styles.icon}>
+              <PersonOutlinedIcon fontSize="small" />
+            </span>
+            <span className={styles.creatorLabel}>
+              <strong>{creatorName}</strong>
+              <span className={styles.creatorContent}>
+                {creatorPosition && (
+                  <span className={styles.creatorPosition}>
+                  {creatorPosition}
+                  </span>
+                )}
+                {creatorAffiliation && (
+                  <span className={styles.creatorAffiliation}>
+                    {creatorAffiliation}
+                  </span>
+                )}
+              </span>
+            </span>
+          </span>
         </div>
 
         {/* ── Participants Section ── */}

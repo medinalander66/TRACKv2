@@ -276,25 +276,25 @@ pointer-events: none;
   gap: 0.5rem;
 }
 
-.todayTags {
+.creatorLabel{
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.tag {
-  background: #e9ecef;
-  padding: 0.15rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  color: #495057;
 }
 
 .todayCreator {
   font-size: 0.9rem;
   color: #333;
+}
+
+.creatorName {
+  margin-right: 0.35rem;
+}
+
+.creatorContent{
+  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 /* ─── Participants ─── */
