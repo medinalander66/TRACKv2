@@ -30,20 +30,14 @@
   align-items: center;
 }
 
-.menuBtn,
-.iconBtn {
-  background: none;
-  border: none;
+.menuBtn {
+  background: var(--primary-color);
+  border-radius: 100%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-}
-
-.menuBtn *,
-.iconBtn * {
-  color: var(--primary-color);
+  padding: 0.5rem;
 }
 
 .title {
@@ -69,7 +63,7 @@
   padding: 0.5rem;
 }
 
-.topActions button * {
+.iconBtn *, .menuBtn * {
   color: var(--tertiary-color);
   font-size: 1rem;
 }
