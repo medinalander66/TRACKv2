@@ -4,7 +4,11 @@ import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import apiClient from "../../../api/client";
 import { useAuth } from "../../../context/AuthContext";
 import styles from "./Home.module.css";
-import { FaCalendarAlt, FaClipboard } from "react-icons/fa";
+import { FaCalendarAlt, FaClipboard, FaRegCalendar } from "react-icons/fa";
+import { IoMdTime } from "react-icons/io";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 // Helper to format date
 const formatDate = (dateStr) => {
@@ -395,7 +399,9 @@ function Home() {
             </span>
             <div className={styles.statCard}>
               Accepted
-              <span className={styles.statNumber}>{quickStats.accepted || 0}</span>
+              <span className={styles.statNumber}>
+                {quickStats.accepted || 0}
+              </span>
             </div>
           </span>
         </div>
@@ -407,7 +413,9 @@ function Home() {
             </span>
             <div className={styles.statCard}>
               Declined
-              <span className={styles.statNumber}>{quickStats.declined || 0}</span>
+              <span className={styles.statNumber}>
+                {quickStats.declined || 0}
+              </span>
             </div>
           </span>
         </div>
@@ -419,7 +427,9 @@ function Home() {
             </span>
             <div className={styles.statCard}>
               Missed
-              <span className={styles.statNumber}>{quickStats.missed || 0}</span>
+              <span className={styles.statNumber}>
+                {quickStats.missed || 0}
+              </span>
             </div>
           </span>
         </div>
@@ -431,7 +441,9 @@ function Home() {
             </span>
             <div className={styles.statCard}>
               Pending
-              <span className={styles.statNumber}>{quickStats.pending || 0}</span>
+              <span className={styles.statNumber}>
+                {quickStats.pending || 0}
+              </span>
             </div>
           </span>
         </div>
@@ -443,7 +455,9 @@ function Home() {
             </span>
             <div className={styles.statCard}>
               Conflicted
-              <span className={styles.statNumber}>{quickStats.conflicted || 0}</span>
+              <span className={styles.statNumber}>
+                {quickStats.conflicted || 0}
+              </span>
             </div>
           </span>
         </div>
@@ -476,15 +490,30 @@ function Home() {
         <h3>{todayEvent.title}</h3>
         <p className={styles.todayDesc}>{todayEvent.description}</p>
         <div className={styles.todayMeta}>
-          <span>
-            📅 {formatDate(todayEvent.start_datetime)} -{" "}
+          <span className={styles.metaContent}>
+            <span className={styles.icon}>
+              {" "}
+              <CalendarTodayOutlinedIcon fontSize="small" />{" "}
+            </span>{" "}
+            {formatDate(todayEvent.start_datetime)} -{" "}
             {formatDate(todayEvent.end_datetime)}
           </span>
-          <span>
-            ⏰ {formatTime(todayEvent.start_datetime)} -{" "}
+          <span className={styles.metaContent}>
+            <span className={styles.icon}>
+              {" "}
+              <AccessTimeOutlinedIcon fontSize="small" />{" "}
+            </span>{" "}
+            {formatTime(todayEvent.start_datetime)} -{" "}
             {formatTime(todayEvent.end_datetime)}
           </span>
-          <span>📍 {todayEvent.venue || todayEvent.location || "Online"}</span>
+          <span className={styles.metaContent}>
+            {" "}
+            <span className={styles.icon}>
+              {" "}
+              <LocationOnOutlinedIcon fontSize="small" />{" "}
+            </span>{" "}
+            {todayEvent.venue || todayEvent.location || "Online"}
+          </span>
         </div>
         <div className={styles.todayTags}>
           <span className={styles.tag}>{todayEvent.method}</span>
