@@ -538,7 +538,7 @@ function Home() {
               <span className={styles.creatorContent}>
                 {creatorPosition && (
                   <span className={styles.creatorPosition}>
-                  {creatorPosition}
+                    {creatorPosition}
                   </span>
                 )}
                 {creatorAffiliation && (
@@ -681,7 +681,10 @@ function Home() {
       {/* Welcome Header */}
       <div className={styles.introContent}>
         <h1>
-          Welcome, {displayUser?.full_name || displayUser?.username || "User"}
+          Welcome,{" "}
+          <span className={styles.introName}>
+            {displayUser?.full_name || displayUser?.username || "User"}
+          </span>
         </h1>
         {displayUser && (
           <p>
@@ -697,11 +700,13 @@ function Home() {
         <div className={styles.quickTop}>
           <h2>
             Quick Stats,{" "}
-            {quickStatType === "task"
-              ? "Tasks"
-              : quickStatType.charAt(0).toUpperCase() +
-                quickStatType.slice(1) +
-                " Events"}
+            <span className={styles.quickStatType}>
+              {quickStatType === "task"
+                ? "Tasks"
+                : quickStatType.charAt(0).toUpperCase() +
+                  quickStatType.slice(1) +
+                  " Events"}
+            </span>
           </h2>
           <div className={styles.btnContainer}>
             <button

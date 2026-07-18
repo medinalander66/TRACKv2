@@ -17,6 +17,9 @@
   color: var(--text-color, #1a1a1a);
 }
 
+.introName{
+  color: var(--primary-color, #800000);
+}
 .introContent p {
   color: var(--fifth-color, #6c757d);
   font-size: 0.95rem;
@@ -45,6 +48,9 @@
   color: var(--text-color, #1a1a1a);
 }
 
+.quickStatType{
+  color: var(--primary-color);
+}
 .btnContainer {
   display: flex;
   gap: 0.5rem;
