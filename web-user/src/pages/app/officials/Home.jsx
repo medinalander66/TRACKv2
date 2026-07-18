@@ -9,7 +9,9 @@ import { IoMdTime } from "react-icons/io";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-
+import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
+import LocationCityOutlinedIcon from '@mui/icons-material/LocationCityOutlined';
 // Helper to format date
 const formatDate = (dateStr) => {
   const d = new Date(dateStr);
@@ -492,33 +494,32 @@ function Home() {
         <div className={styles.todayMeta}>
           <span className={styles.metaContent}>
             <span className={styles.icon}>
-              {" "}
-              <CalendarTodayOutlinedIcon fontSize="small" />{" "}
-            </span>{" "}
+              <CalendarTodayOutlinedIcon fontSize="small" />
+            </span>
             {formatDate(todayEvent.start_datetime)} -{" "}
             {formatDate(todayEvent.end_datetime)}
           </span>
           <span className={styles.metaContent}>
             <span className={styles.icon}>
-              {" "}
-              <AccessTimeOutlinedIcon fontSize="small" />{" "}
-            </span>{" "}
+              <AccessTimeOutlinedIcon fontSize="small" />
+            </span>
             {formatTime(todayEvent.start_datetime)} -{" "}
             {formatTime(todayEvent.end_datetime)}
           </span>
           <span className={styles.metaContent}>
-            {" "}
             <span className={styles.icon}>
-              {" "}
-              <LocationOnOutlinedIcon fontSize="small" />{" "}
-            </span>{" "}
+              <LocationOnOutlinedIcon fontSize="small" />
+            </span>
             {todayEvent.venue || todayEvent.location || "Online"}
           </span>
-        </div>
-        <div className={styles.todayTags}>
-          <span className={styles.tag}>{todayEvent.method}</span>
-          <span className={styles.tag}>{todayEvent.hierarchy}</span>
-          <span className={styles.tag}>{todayEvent.event_type}</span>
+          <span className={styles.metaContent}>
+            <span>
+              <GroupOutlinedIcon fontSize="small" />
+            </span>
+            {todayEvent.method}
+          </span>
+          <span className={styles.metaContent}> <span> <LocationCityOutlinedIcon fontSize="small"/> </span>{todayEvent.hierarchy}</span>
+          <span className={styles.metaContent}> <span><EventOutlinedIcon fontSize="small"/></span>{todayEvent.event_type}</span>
         </div>
         <div className={styles.todayCreator}>
           <strong>{creatorDisplay}</strong>
