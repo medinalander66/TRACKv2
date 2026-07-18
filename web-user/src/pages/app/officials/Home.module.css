@@ -54,8 +54,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px solid #ddd;
-  background: #fff;
+  border: 1px solid var(--button-border-color);
+  background: var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,8 +65,12 @@
   transition: 0.2s;
 }
 
+.circleArrowButton *{
+  color: var(--tertiary-color);
+}
+
 .circleArrowButton:hover {
-  background: #f0f0f0;
+  background: var(--button-primary-hover-color);
 }
 
 .quickNav {
@@ -102,7 +106,7 @@
 .quickNav > button {
   background: none;
   border: none;
-  color: var(--primary-color, #800000);
+  color: var(--hyperlink-color);
   font-weight: 600;
   cursor: pointer;
   font-size: 0.9rem;
@@ -208,7 +212,7 @@
 .subTitle button {
   background: none;
   border: none;
-  color: var(--primary-color, #800000);
+  color: var(--hyperlink-color);
   font-weight: 600;
   cursor: pointer;
   font-size: 0.9rem;
@@ -337,7 +341,7 @@
 .upcomingHeader button {
   background: none;
   border: none;
-  color: var(--primary-color, #800000);
+  color: var(--hyperlink-color);
   font-weight: 600;
   cursor: pointer;
   font-size: 0.9rem;
