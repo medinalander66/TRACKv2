@@ -718,14 +718,15 @@ function Home() {
         <div className={styles.titleContainer}>
           <div className={styles.titleContent}>
             <h1>Today's Event</h1>
-          </div>
-          <div className={styles.subTitle}>
-            <h2>{formatDate(new Date())}</h2>
             <button type="button" onClick={gotoCalendar}>
               View Calendar
             </button>
           </div>
+          <div className={styles.subTitle}>
+            <h2>{formatDate(new Date())}</h2>
+          </div>
         </div>
+
         <div className={styles.todayContent}>{renderTodayEvent()}</div>
       </div>
 
