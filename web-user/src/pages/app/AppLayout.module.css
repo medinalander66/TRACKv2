@@ -59,6 +59,21 @@
   gap: 8px;
 }
 
+.topActions button {
+  background: var(--primary-color);
+  border-radius: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.topActions button * {
+  color: var(--tertiary-color);
+  font-size: 1rem;
+}
+
 /* ===== Main Content ===== */
 .mainContent {
   flex: 1;
