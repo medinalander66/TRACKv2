@@ -99,7 +99,7 @@
   border-color: var(--primary-color, #800000);
 }
 
-.quickNav>button {
+.quickNav > button {
   background: none;
   border: none;
   color: var(--primary-color, #800000);
@@ -115,6 +115,17 @@
   margin-top: 0.5rem;
 }
 
+.statItem::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary-color);
+  border-radius: 4px 0 0 4px;
+}
+
 .statItem {
   display: flex;
   align-items: center;
@@ -122,6 +133,7 @@
   background: #f8f9fa;
   border-radius: 12px;
   padding: 0.7rem;
+  position: relative;
 }
 
 .statIcon * {
@@ -129,7 +141,7 @@
   background: var(--primary-color);
   border-radius: 5px;
   color: var(--background-color);
-  padding: .2rem;
+  padding: 0.2rem;
 }
 
 .statNumber {

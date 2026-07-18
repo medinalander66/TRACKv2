@@ -4,7 +4,7 @@ import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import apiClient from "../../../api/client";
 import { useAuth } from "../../../context/AuthContext";
 import styles from "./Home.module.css";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaClipboard } from "react-icons/fa";
 
 // Helper to format date
 const formatDate = (dateStr) => {
@@ -332,22 +332,48 @@ function Home() {
       return (
         <div className={styles.statsGrid}>
           <div className={styles.statItem}>
-            <span className={styles.statNumber}>
-              {quickStats.completed || 0}
+            <span className={styles.statLabel}>
+              <span className={styles.statIcon}>
+                <FaClipboard />
+              </span>
+              <div className={styles.statCard}>
+                Completed
+                <span className={styles.statNumber}>
+                  {quickStats.completed || 0}
+                </span>
+              </div>
             </span>
-            <span className={styles.statLabel}>Completed</span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statNumber}>{quickStats.missed || 0}</span>
-            <span className={styles.statLabel}>Missed</span>
+            <span className={styles.statLabel}>
+              <span className={styles.statIcon}>
+                <FaClipboard />
+              </span>
+              <div className={styles.statCard}>
+                Missed
+                <span className={styles.statNumber}>
+                  {quickStats.missed || 0}
+                </span>
+              </div>
+            </span>
           </div>
           <div className={styles.statItem}>
-            <span className={styles.statNumber}>{quickStats.pending || 0}</span>
-            <span className={styles.statLabel}>Pending</span>
+            <span className={styles.statLabel}>
+              <span className={styles.statIcon}>
+                <FaClipboard />
+              </span>
+              <div className={styles.statCard}>
+                Pending
+                <span className={styles.statNumber}>
+                  {quickStats.pending || 0}
+                </span>
+              </div>
+            </span>
           </div>
         </div>
       );
     }
+
     return (
       <div className={styles.statsGrid}>
         <div className={styles.statItem}>
@@ -361,27 +387,65 @@ function Home() {
             </div>
           </span>
         </div>
+
         <div className={styles.statItem}>
-          <span className={styles.statNumber}>{quickStats.accepted || 0}</span>
-          <span className={styles.statLabel}>Accepted</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNumber}>{quickStats.declined || 0}</span>
-          <span className={styles.statLabel}>Declined</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNumber}>{quickStats.missed || 0}</span>
-          <span className={styles.statLabel}>Missed</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNumber}>{quickStats.pending || 0}</span>
-          <span className={styles.statLabel}>Pending</span>
-        </div>
-        <div className={styles.statItem}>
-          <span className={styles.statNumber}>
-            {quickStats.conflicted || 0}
+          <span className={styles.statLabel}>
+            <span className={styles.statIcon}>
+              <FaCalendarAlt />
+            </span>
+            <div className={styles.statCard}>
+              Accepted
+              <span className={styles.statNumber}>{quickStats.accepted || 0}</span>
+            </div>
           </span>
-          <span className={styles.statLabel}>Conflicted</span>
+        </div>
+
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>
+            <span className={styles.statIcon}>
+              <FaCalendarAlt />
+            </span>
+            <div className={styles.statCard}>
+              Declined
+              <span className={styles.statNumber}>{quickStats.declined || 0}</span>
+            </div>
+          </span>
+        </div>
+
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>
+            <span className={styles.statIcon}>
+              <FaCalendarAlt />
+            </span>
+            <div className={styles.statCard}>
+              Missed
+              <span className={styles.statNumber}>{quickStats.missed || 0}</span>
+            </div>
+          </span>
+        </div>
+
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>
+            <span className={styles.statIcon}>
+              <FaCalendarAlt />
+            </span>
+            <div className={styles.statCard}>
+              Pending
+              <span className={styles.statNumber}>{quickStats.pending || 0}</span>
+            </div>
+          </span>
+        </div>
+
+        <div className={styles.statItem}>
+          <span className={styles.statLabel}>
+            <span className={styles.statIcon}>
+              <FaCalendarAlt />
+            </span>
+            <div className={styles.statCard}>
+              Conflicted
+              <span className={styles.statNumber}>{quickStats.conflicted || 0}</span>
+            </div>
+          </span>
         </div>
       </div>
     );
