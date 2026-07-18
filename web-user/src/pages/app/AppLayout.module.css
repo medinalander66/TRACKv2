@@ -143,10 +143,24 @@
   color: #6b7280;
   font-size: 11px;
   gap: 2px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.navLabel {
+  display: block;
 }
 
 .navItemActive {
-  color: var(--primary-color, #800000);
+  background: var(--primary-color);
+  color: var(--tertiary-color);
+  width: 5rem;
+}
+
+.navItemActive span, .navItemActive span *  {
+  font-weight: bold;
+  color: var(--tertiary-color);
 }
 
 .navIcon {
