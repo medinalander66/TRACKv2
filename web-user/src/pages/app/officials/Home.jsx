@@ -5,7 +5,6 @@ import apiClient from "../../../api/client";
 import { useAuth } from "../../../context/AuthContext";
 import styles from "./Home.module.css";
 import { FaCalendarAlt, FaClipboard, FaRegCalendar } from "react-icons/fa";
-import { IoMdTime } from "react-icons/io";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -13,6 +12,7 @@ import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import LocationCityOutlinedIcon from "@mui/icons-material/LocationCityOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 
 // Helper to format date
 const formatDate = (dateStr) => {
@@ -683,7 +683,16 @@ function Home() {
             onClick={handleShowMoreTasks}
             disabled={upcomingTasksLoading}
           >
-            {upcomingTasksLoading ? "Loading..." : "Show More ▼"}
+            {upcomingTasksLoading ? (
+              "Loading..."
+            ) : (
+              <span>
+                Show More
+                <span>
+                  <KeyboardArrowDownOutlinedIcon />
+                </span>
+              </span>
+            )}
           </button>
         )}
       </div>

@@ -506,19 +506,31 @@ pointer-events: none;
 }
 
 .showMoreBtn {
-  background: none;
+  background: var(--primary-color);
   border: none;
-  color: var(--primary-color, #800000);
+  color: var(--tertiary-color);
   font-weight: 600;
   cursor: pointer;
   padding: 0.5rem 0;
   width: 100%;
+  border-radius: 1rem;
   text-align: center;
   font-size: 0.9rem;
 }
 
+.showMoreBtn span{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--tertiary-color);
+}
+
+.showMoreBtn span *{
+  color: var(--tertiary-color);
+}
+
 .showMoreBtn:disabled {
-  color: #aaa;
+  color: var(--tertiary-color);
   cursor: not-allowed;
 }
 
