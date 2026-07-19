@@ -625,9 +625,24 @@ function Home() {
               <h4>{ev.title}</h4>
               <p>{ev.description?.substring(0, 60)}...</p>
               <div className={styles.upcomingMeta}>
-                <span>{formatTime(ev.start_datetime)}</span>
-                <span>{ev.venue || ev.location || "Online"}</span>
-                <span>{ev.event_type}</span>
+                <span className={styles.upcomingMetaContent}>
+                  <span className={styles.icon}>
+                    <AccessTimeOutlinedIcon fontSize="small"/>
+                  </span>
+                  <span>{formatTime(ev.start_datetime)}</span>
+                </span>
+                <span className={styles.upcomingMetaContent}>
+                  <span className={styles.icon}>
+                    <LocationOnOutlinedIcon fontSize="small"/>
+                  </span>
+                  <span>{ev.venue || ev.location || "Online"}</span>
+                </span>
+                <span className={styles.upcomingMetaContent}>
+                  <span className={styles.icon}>
+                    <GroupOutlinedIcon fontSize="small"/>
+                  </span>
+                  <span>{ev.event_type}</span>
+                </span>
               </div>
             </div>
           </div>
