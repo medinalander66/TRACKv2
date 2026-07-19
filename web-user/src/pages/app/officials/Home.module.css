@@ -430,6 +430,33 @@ pointer-events: none;
   color: var(--primary-color, #800000);
 }
 
+/* Date card for upcoming events (stacked month/day) */
+.dateCard {
+  background: #000;
+  color: var(--tertiary-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  min-width: 56px;
+}
+
+.dateMonth {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  opacity: 0.85;
+  color: var(--tertiary-color);
+}
+
+.dateDay {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--tertiary-color);
+}
+
 .upcomingInfo {
   flex: 1;
 }

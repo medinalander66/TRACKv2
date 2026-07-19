@@ -23,6 +23,15 @@ const formatDate = (dateStr) => {
     year: "numeric",
   });
 };
+
+// Helper returning month and day separately (no year)
+const formatMonthDay = (dateStr) => {
+  const d = new Date(dateStr);
+  const month = d.toLocaleString("en-US", { month: "short" });
+  const day = d.getDate();
+  return { month, day };
+};
+
 const formatTime = (dateStr) => {
   const d = new Date(dateStr);
   return d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
@@ -603,9 +612,14 @@ function Home() {
         {filtered.map((ev) => (
           <div key={ev.id} className={styles.upcomingItem}>
             <div className={styles.upcomingDate}>
-              <span className={styles.monthDay}>
-                {formatDate(ev.start_datetime)}
-              </span>
+              <div className={styles.dateCard}>
+                <span className={styles.dateMonth}>
+                  {formatMonthDay(ev.start_datetime).month}
+                </span>
+                <span className={styles.dateDay}>
+                  {formatMonthDay(ev.start_datetime).day}
+                </span>
+              </div>
             </div>
             <div className={styles.upcomingInfo}>
               <h4>{ev.title}</h4>
